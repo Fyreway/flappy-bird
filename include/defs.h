@@ -11,7 +11,6 @@
 #define ANIMATION_TIME 10
 #define UPDATE_TIME 4
 
-#define UPHEIGHT 8
-#define GRAVITY 1
+#define UPHEIGHT 10
 
 #endif // __DEFS_H__
