@@ -17,7 +17,7 @@ SDLState *sdl_init() {
         exit(EXIT_FAILURE);
     }
     sdl_state->renderer = SDL_CreateRenderer(sdl_state->window, -1,
-        SDL_RENDERER_ACCELERATED);
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (sdl_state->renderer == NULL) {
         printf("SDL_Renderer creation error: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
@@ -27,6 +27,18 @@ SDLState *sdl_init() {
         printf("Bird texture loading error: %s\n", IMG_GetError());
         exit(EXIT_FAILURE);
     }
+
+    sdl_state->bird_frames[0].x = 0;
+    sdl_state->bird_frames[0].y = 0;
+    sdl_state->bird_frames[0].w = BIRDWIDTH;
+    sdl_state->bird_frames[0].h = BIRDHEIGHT;
+
+    sdl_state->bird_frames[1].x = BIRDWIDTH;
+    sdl_state->bird_frames[1].y = 0;
+    sdl_state->bird_frames[1].w = BIRDWIDTH;
+    sdl_state->bird_frames[1].h = BIRDHEIGHT;
+
+    sdl_state->frame = 0;
 
     return sdl_state;
 }
@@ -60,11 +72,8 @@ EventCode process_events() {
 
 void render(SDLState *const sdl_state, const GameState *game_state) {
     SDL_RenderClear(sdl_state->renderer);
-    SDL_Rect src;
-    src.x = 0;
-    src.y = 0;
-    src.w = BIRDWIDTH;
-    src.h = BIRDHEIGHT;
+
+    SDL_Rect *current_frame = &sdl_state->bird_frames[sdl_state->frame / ANIMATION_TIME];
 
     SDL_Rect dst;
     dst.x = (SCRWIDTH - BIRDWIDTH * 4) / 2;
@@ -72,7 +81,8 @@ void render(SDLState *const sdl_state, const GameState *game_state) {
     dst.w = BIRDWIDTH * 4;
     dst.h = BIRDHEIGHT * 4;
 
-    SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, &src, &dst);
+
+    SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, current_frame, &dst);
     SDL_RenderPresent(sdl_state->renderer);
 }
 

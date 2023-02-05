@@ -15,6 +15,8 @@ typedef struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *bird_texture;
+    SDL_Rect bird_frames[2];
+    int frame;
 } SDLState;
 
 SDLState *sdl_init();

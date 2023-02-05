@@ -9,6 +9,7 @@ NOTES FOR FUTURE ME OR READER (labeled with letters at the beginning):
 
 #include <stdbool.h>
 
+#include "defs.h"
 #include "sdl_interface.h"
 
 int main() {
@@ -19,12 +20,12 @@ int main() {
 
     while (running) {
         switch (process_events()) {
-            case EC_QUIT:
-                running = false;
-                break;
-            default:
-                break;
+            case EC_QUIT: running = false; break;
+            default: break;
         }
+
+        sdl_state->frame++;
+        if (sdl_state->frame / ANIMATION_TIME >= 2) sdl_state->frame = 0;
 
         render(sdl_state, game_state);
     }

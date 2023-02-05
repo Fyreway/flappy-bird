@@ -8,4 +8,6 @@
 #define BIRDWIDTH 17
 #define BIRDHEIGHT 12
 
+#define ANIMATION_TIME 10
+
 #endif // __DEFS_H__
