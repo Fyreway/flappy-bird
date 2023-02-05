@@ -62,10 +62,17 @@ void render(SDLState *const sdl_state, const GameState *game_state) {
     SDL_RenderClear(sdl_state->renderer);
     SDL_Rect src;
     src.x = 0;
-    src.y = game_state->bird_y;
-    src.w = 17;
-    src.h = 12;
-    SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, &src, &src);
+    src.y = 0;
+    src.w = BIRDWIDTH;
+    src.h = BIRDHEIGHT;
+
+    SDL_Rect dst;
+    dst.x = (SCRWIDTH - BIRDWIDTH * 4) / 2;
+    dst.y = game_state->bird_y - (BIRDHEIGHT * 4) / 2;
+    dst.w = BIRDWIDTH * 4;
+    dst.h = BIRDHEIGHT * 4;
+
+    SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, &src, &dst);
     SDL_RenderPresent(sdl_state->renderer);
 }
 
