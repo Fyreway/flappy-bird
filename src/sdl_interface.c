@@ -2,6 +2,12 @@
 
 #include "defs.h"
 
+#define setrect(n,_x,_y,_w,_h) \
+    n.x = _x; \
+    n.y = _y; \
+    n.w = _w; \
+    n.h = _h
+
 SDLState *sdl_init() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         printf("SDL init error: %s\n", SDL_GetError());
@@ -28,15 +34,8 @@ SDLState *sdl_init() {
         exit(EXIT_FAILURE);
     }
 
-    sdl_state->bird_frames[0].x = 0;
-    sdl_state->bird_frames[0].y = 0;
-    sdl_state->bird_frames[0].w = BIRDWIDTH;
-    sdl_state->bird_frames[0].h = BIRDHEIGHT;
-
-    sdl_state->bird_frames[1].x = BIRDWIDTH;
-    sdl_state->bird_frames[1].y = 0;
-    sdl_state->bird_frames[1].w = BIRDWIDTH;
-    sdl_state->bird_frames[1].h = BIRDHEIGHT;
+    setrect(sdl_state->bird_frames[0], 0, 0, BIRDWIDTH, BIRDHEIGHT);
+    setrect(sdl_state->bird_frames[1], BIRDWIDTH, 0, BIRDWIDTH, BIRDHEIGHT);
 
     sdl_state->frame = 0;
 
@@ -76,10 +75,8 @@ void render(SDLState *const sdl_state, const GameState *game_state) {
     SDL_Rect *current_frame = &sdl_state->bird_frames[sdl_state->frame / ANIMATION_TIME];
 
     SDL_Rect dst;
-    dst.x = (SCRWIDTH - BIRDWIDTH * 4) / 2;
-    dst.y = game_state->bird_y - (BIRDHEIGHT * 4) / 2;
-    dst.w = BIRDWIDTH * 4;
-    dst.h = BIRDHEIGHT * 4;
+    setrect(dst, (SCRWIDTH - BIRDWIDTH * 4) / 2, game_state->bird_y - (BIRDHEIGHT * 4) / 2,
+        BIRDWIDTH * 4, BIRDHEIGHT * 4);
 
 
     SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, current_frame, &dst);
