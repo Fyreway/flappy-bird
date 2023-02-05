@@ -1,18 +1,16 @@
 #ifndef __FLAPPY_BIRD_H__
 #define __FLAPPY_BIRD_H__
 
-#include "types.h"
-
 typedef struct {
     // Static vars
-    u32 high_score;
+    unsigned int high_score;
 
     // Per-round vars
     // d. I could use nested structs, but the initialization would take so many
     //    lines of code (this is what I get for using C)
-    u32 bird_y;
+    int bird_y;
 
-    u32 score;
+    unsigned int score;
 } GameState;
 
 GameState *game_init();

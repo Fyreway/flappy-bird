@@ -7,7 +7,7 @@ NOTES FOR FUTURE ME OR READER (labeled with letters at the beginning):
    to when I wrote them. This is NOT because I am lazy (read: I'm super lazy).
 */
 
-#include "types.h"
+#include <stdbool.h>
 
 #include "sdl_interface.h"
 

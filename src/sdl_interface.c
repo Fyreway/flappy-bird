@@ -61,10 +61,8 @@ EventCode process_events() {
 void render(SDLState *const sdl_state, const GameState *game_state) {
     SDL_RenderClear(sdl_state->renderer);
     SDL_Rect src;
-    // If you're wondering why, in this particular point in history, the high
-    // score determines the X, it's because I needed to use game_state somehow.
-    src.x = game_state->high_score;
-    src.y = 0;
+    src.x = 0;
+    src.y = game_state->bird_y;
     src.w = 17;
     src.h = 12;
     SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, &src, &src);
