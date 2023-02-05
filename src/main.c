@@ -5,6 +5,8 @@ NOTES FOR FUTURE ME OR READER (labeled with letters at the beginning):
    sh*tty code.
 3. Meta-note: the notes are ordered not by line, but chronologically according
    to when I wrote them. This is NOT because I am lazy (read: I'm super lazy).
+4. Meta-note 2: there are some notes missing because I deleted them along with
+   the code I was talking about in said notes.
 */
 
 #include <stdbool.h>
@@ -17,11 +19,20 @@ int main() {
     GameState *game_state = game_init();
 
     bool running = true;
+    bool started = false;
 
     while (running) {
         switch (process_events()) {
             case EC_QUIT: running = false; break;
+            case EC_UP: up(game_state); started = true; break;
             default: break;
+        }
+
+
+        game_state->frame++;
+        if (game_state->frame == UPDATE_TIME) {
+            if (started) update(game_state);
+            game_state->frame = 0;
         }
 
         sdl_state->frame++;

@@ -8,7 +8,7 @@ TARGET := build/flappybird
 
 .PHONY: all clean
 
-all: $(TARGET)
+all: clean $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $^ -o $@ $(LDFLAGS) $(WARN)

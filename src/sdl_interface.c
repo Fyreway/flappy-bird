@@ -8,6 +8,7 @@
     n.w = _w; \
     n.h = _h
 
+// h. At what point does this need to be broken up?
 SDLState *sdl_init() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         printf("SDL init error: %s\n", SDL_GetError());
@@ -45,12 +46,9 @@ SDLState *sdl_init() {
 EventCode handle_keypress(const SDL_KeyboardEvent *e) {
     if (e->repeat != 0) return EC_OK;
     switch (e->keysym.sym) {
-        case SDLK_ESCAPE:
-            return EC_MENU;
-        case SDLK_SPACE:
-            return EC_FLY;
-        default:
-            return EC_OK;
+        case SDLK_ESCAPE: return EC_MENU;
+        case SDLK_SPACE: return EC_UP;
+        default: return EC_OK;
     }
 }
 
@@ -58,10 +56,8 @@ EventCode process_events() {
     static SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
-            case SDL_QUIT:
-                return EC_QUIT;
-            case SDL_KEYDOWN:
-                return handle_keypress(&e.key);
+            case SDL_QUIT: return EC_QUIT;
+            case SDL_KEYDOWN: return handle_keypress(&e.key);
             // TODO: Menu clicking
         }
     }

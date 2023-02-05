@@ -23,12 +23,7 @@ SDLState *sdl_init();
 
 void sdl_deinit(SDLState *sdl_state);
 
-typedef enum {
-    EC_OK,
-    EC_QUIT,
-    EC_MENU,
-    EC_FLY
-} EventCode;
+typedef enum { EC_OK, EC_QUIT, EC_MENU, EC_UP } EventCode;
 
 EventCode process_events();
 
