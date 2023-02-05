@@ -6,9 +6,11 @@ WARN :=  -Wall -Werror -Wextra
 LDFLAGS := `sdl2-config --libs` -lSDL2_image
 TARGET := build/flappybird
 
-.PHONY: all clean
+.PHONY: all rebuild clean
 
-all: clean $(TARGET)
+all: $(TARGET)
+
+rebuild: clean $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $^ -o $@ $(LDFLAGS) $(WARN)
