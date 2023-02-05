@@ -3,17 +3,30 @@
 #include "defs.h"
 
 SDLState *sdl_init() {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) return NULL;
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+        printf("SDL init error: %s\n", SDL_GetError());
+    if (IMG_Init(IMG_INIT_PNG) == 0)
+        printf("SDL_image init error: %s\n", IMG_GetError());
 
     SDLState *sdl_state = malloc(sizeof(SDLState));
-    if (sdl_state == NULL) return NULL;
 
     sdl_state->window = SDL_CreateWindow("flappybird", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, SCRWIDTH, SCRHEIGHT, SDL_WINDOW_SHOWN);
-    if (sdl_state->window == NULL) return NULL;
-
-    sdl_state->scr_surface = SDL_GetWindowSurface(sdl_state->window);
-    if (sdl_state->scr_surface == NULL) return NULL;
+    if (sdl_state->window == NULL) {
+        printf("SDL_Window creation error: %s\n", SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+    sdl_state->renderer = SDL_CreateRenderer(sdl_state->window, -1,
+        SDL_RENDERER_ACCELERATED);
+    if (sdl_state->renderer == NULL) {
+        printf("SDL_Renderer creation error: %s\n", SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+    sdl_state->bird_texture = IMG_LoadTexture(sdl_state->renderer, "./res/bird.png");
+    if (sdl_state->bird_texture == NULL) {
+        printf("Bird texture loading error: %s\n", IMG_GetError());
+        exit(EXIT_FAILURE);
+    }
 
     return sdl_state;
 }
@@ -30,7 +43,7 @@ EventCode handle_keypress(const SDL_KeyboardEvent *e) {
     }
 }
 
-EventCode process_events(SDLState *const sdl_state) {
+EventCode process_events() {
     static SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
@@ -41,19 +54,33 @@ EventCode process_events(SDLState *const sdl_state) {
             // TODO: Menu clicking
         }
     }
+
     return EC_OK;
 }
 
 void render(SDLState *const sdl_state, const GameState *game_state) {
-    // TODO
+    SDL_RenderClear(sdl_state->renderer);
+    SDL_Rect src;
+    // If you're wondering why, in this particular point in history, the high
+    // score determines the X, it's because I needed to use game_state somehow.
+    src.x = game_state->high_score;
+    src.y = 0;
+    src.w = 17;
+    src.h = 12;
+    SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, &src, &src);
+    SDL_RenderPresent(sdl_state->renderer);
 }
 
-void deinit(SDLState *sdl_state) {
-    SDL_FreeSurface(sdl_state->scr_surface);
-    sdl_state->scr_surface = NULL;
+void sdl_deinit(SDLState *sdl_state) {
+    SDL_DestroyTexture(sdl_state->bird_texture);
+    sdl_state->bird_texture = NULL;
+    SDL_DestroyRenderer(sdl_state->renderer);
+    sdl_state->renderer = NULL;
     SDL_DestroyWindow(sdl_state->window);
     sdl_state->window = NULL;
     free(sdl_state);
     sdl_state = NULL;
+
+    IMG_Quit();
     SDL_Quit();
 }

@@ -3,6 +3,7 @@
 
 // e. Ah, aren't you an annoying little f*cker...
 #include <SDL.h>
+#include <SDL_image.h>
 
 #include "game.h"
 
@@ -10,23 +11,24 @@
       It was because the struct was supposed to be the "guts" of the internal SDL
       management.
 */
-typedef struct _SDLState {
+typedef struct {
     SDL_Window *window;
-    SDL_Surface *scr_surface;
+    SDL_Renderer *renderer;
+    SDL_Texture *bird_texture;
 } SDLState;
 
 SDLState *sdl_init();
 
-void deinit(SDLState *sdl_state);
+void sdl_deinit(SDLState *sdl_state);
 
-typedef enum _EventCode {
+typedef enum {
     EC_OK,
     EC_QUIT,
     EC_MENU,
     EC_FLY
 } EventCode;
 
-EventCode process_events(SDLState *const sdl_state);
+EventCode process_events();
 
 void render(SDLState *const sdl_state, const GameState *game_state);
 

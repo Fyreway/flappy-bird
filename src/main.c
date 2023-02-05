@@ -12,19 +12,23 @@ NOTES FOR FUTURE ME OR READER (labeled with letters at the beginning):
 #include "sdl_interface.h"
 
 int main() {
-    struct SDLState *sdl_state = sdl_init();
+    SDLState *sdl_state = sdl_init();
+    GameState *game_state = game_init();
 
     bool running = true;
 
     while (running) {
-        switch (process_events(sdl_state)) {
+        switch (process_events()) {
             case EC_QUIT:
                 running = false;
                 break;
             default:
                 break;
         }
+
+        render(sdl_state, game_state);
     }
 
-    deinit(sdl_state);
+    sdl_deinit(sdl_state);
+    game_deinit(game_state);
 }

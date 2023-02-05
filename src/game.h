@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-typedef struct _GameState {
+typedef struct {
     // Static vars
     u32 high_score;
 
@@ -16,5 +16,7 @@ typedef struct _GameState {
 } GameState;
 
 GameState *game_init();
+
+void game_deinit(GameState *game_state);
 
 #endif // __FLAPPY_BIRD_H__
