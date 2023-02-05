@@ -12,12 +12,12 @@ NOTES FOR FUTURE ME OR READER (labeled with letters at the beginning):
 #include "sdl_interface.h"
 
 int main() {
-    struct SDLState *guts = init();
+    struct SDLState *sdl_state = sdl_init();
 
     bool running = true;
 
     while (running) {
-        switch (process_events(guts)) {
+        switch (process_events(sdl_state)) {
             case EC_QUIT:
                 running = false;
                 break;
@@ -26,5 +26,5 @@ int main() {
         }
     }
 
-    deinit(guts);
+    deinit(sdl_state);
 }

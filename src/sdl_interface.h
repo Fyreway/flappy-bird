@@ -4,27 +4,30 @@
 // e. Ah, aren't you an annoying little f*cker...
 #include <SDL.h>
 
-#define SCRWIDTH 800
-#define SCRHEIGHT 600
+#include "game.h"
 
 /* c. For the beginning stages of this project, this struct was called Guts.
       It was because the struct was supposed to be the "guts" of the internal SDL
       management.
 */
-struct SDLState {
+typedef struct _SDLState {
     SDL_Window *window;
     SDL_Surface *scr_surface;
-};
+} SDLState;
 
-struct SDLState *init();
+SDLState *sdl_init();
 
-void deinit(struct SDLState *guts);
+void deinit(SDLState *sdl_state);
 
-enum EventCode {
+typedef enum _EventCode {
     EC_OK,
     EC_QUIT,
-};
+    EC_MENU,
+    EC_FLY
+} EventCode;
 
-enum EventCode process_events(struct SDLState *const guts);
+EventCode process_events(SDLState *const sdl_state);
+
+void render(SDLState *const sdl_state, const GameState *game_state);
 
 #endif // __SDL_INTERFACE_H__

@@ -1,38 +1,59 @@
 #include "sdl_interface.h"
 
-struct SDLState *init() {
+#include "defs.h"
+
+SDLState *sdl_init() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) return NULL;
 
-    struct SDLState *guts = malloc(sizeof(struct SDLState));
-    if (guts == NULL) return NULL;
+    SDLState *sdl_state = malloc(sizeof(SDLState));
+    if (sdl_state == NULL) return NULL;
 
-    guts->window = SDL_CreateWindow("flappybird", SDL_WINDOWPOS_CENTERED,
+    sdl_state->window = SDL_CreateWindow("flappybird", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, SCRWIDTH, SCRHEIGHT, SDL_WINDOW_SHOWN);
-    if (guts->window == NULL) return NULL;
+    if (sdl_state->window == NULL) return NULL;
 
-    guts->scr_surface = SDL_GetWindowSurface(guts->window);
-    if (guts->scr_surface == NULL) return NULL;
+    sdl_state->scr_surface = SDL_GetWindowSurface(sdl_state->window);
+    if (sdl_state->scr_surface == NULL) return NULL;
 
-    return guts;
+    return sdl_state;
 }
 
-enum EventCode process_events(struct SDLState *const guts) {
+EventCode handle_keypress(const SDL_KeyboardEvent *e) {
+    if (e->repeat != 0) return EC_OK;
+    switch (e->keysym.sym) {
+        case SDLK_ESCAPE:
+            return EC_MENU;
+        case SDLK_SPACE:
+            return EC_FLY;
+        default:
+            return EC_OK;
+    }
+}
+
+EventCode process_events(SDLState *const sdl_state) {
     static SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
             case SDL_QUIT:
                 return EC_QUIT;
+            case SDL_KEYDOWN:
+                return handle_keypress(&e.key);
+            // TODO: Menu clicking
         }
     }
     return EC_OK;
 }
 
-void deinit(struct SDLState *guts) {
-    SDL_FreeSurface(guts->scr_surface);
-    guts->scr_surface = NULL;
-    SDL_DestroyWindow(guts->window);
-    guts->window = NULL;
-    free(guts);
-    guts = NULL;
+void render(SDLState *const sdl_state, const GameState *game_state) {
+    // TODO
+}
+
+void deinit(SDLState *sdl_state) {
+    SDL_FreeSurface(sdl_state->scr_surface);
+    sdl_state->scr_surface = NULL;
+    SDL_DestroyWindow(sdl_state->window);
+    sdl_state->window = NULL;
+    free(sdl_state);
+    sdl_state = NULL;
     SDL_Quit();
 }
