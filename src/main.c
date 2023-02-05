@@ -9,20 +9,30 @@ NOTES FOR FUTURE ME OR READER (labeled with letters at the beginning):
    the code I was talking about in said notes.
 */
 
-#include <stdbool.h>
-
 #include "defs.h"
 #include "sdl_interface.h"
 
-int main() {
-    SDLState *sdl_state = sdl_init();
-    GameState *game_state = game_init();
+// typedef enum { RC_PLAY, RC_QUIT } MenuRC;
 
+// MenuRC menu(SDLState *sdl_state, GameState *game_state) {
+//     bool running = true;
+
+//     while (running) {
+//         switch (process_events(false)) {
+//             case EC_QUIT: return RC_QUIT;
+//         }
+
+//         // TODO: Render menu
+//     }
+// }
+
+void game(SDLState *sdl_state, GameState *game_state) {
     bool running = true;
     bool started = false;
+    // bool died = false;
 
     while (running) {
-        switch (process_events()) {
+        switch (process_events(true)) {
             case EC_QUIT: running = false; break;
             case EC_UP: up(game_state); started = true; break;
             default: break;
@@ -31,7 +41,13 @@ int main() {
 
         game_state->frame++;
         if (game_state->frame == UPDATE_TIME) {
-            if (started) update(game_state);
+            if (started) {
+                if (update(game_state)) {
+                    running = false;
+                    started = false;
+                    // died = true;
+                }
+            }
             game_state->frame = 0;
         }
 
@@ -40,6 +56,13 @@ int main() {
 
         render(sdl_state, game_state);
     }
+}
+
+int main() {
+    SDLState *sdl_state = sdl_init();
+    GameState *game_state = game_init();
+
+    game(sdl_state, game_state);
 
     sdl_deinit(sdl_state);
     game_deinit(game_state);

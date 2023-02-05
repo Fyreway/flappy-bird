@@ -22,10 +22,15 @@ void up(GameState *const game_state) {
     game_state->bird_vy = -UPHEIGHT;
 }
 
-void update(GameState *const game_state) {
-    game_state->bird_vy += GRAVITY;
+bool update(GameState *const game_state) {
+    game_state->bird_vy++;
 
-    game_state->bird_y += game_state->bird_vy;
+    if (game_state->bird_y >= SCRHEIGHT)
+        return true;
+    else
+        game_state->bird_y += game_state->bird_vy;
+
+    return false;
 }
 
 void game_deinit(GameState *game_state) {

@@ -21,7 +21,7 @@ GameState *game_init();
 
 void up(GameState *const game_state);
 
-void update(GameState *const game_state);
+bool update(GameState *const game_state);
 
 void game_deinit(GameState *game_state);
 

@@ -52,12 +52,14 @@ EventCode handle_keypress(const SDL_KeyboardEvent *e) {
     }
 }
 
-EventCode process_events() {
+EventCode process_events(bool in_game) {
     static SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
             case SDL_QUIT: return EC_QUIT;
-            case SDL_KEYDOWN: return handle_keypress(&e.key);
+            case SDL_KEYDOWN:
+                if (in_game) return handle_keypress(&e.key);
+                break;
             // TODO: Menu clicking
         }
     }
@@ -71,9 +73,8 @@ void render(SDLState *const sdl_state, const GameState *game_state) {
     SDL_Rect *current_frame = &sdl_state->bird_frames[sdl_state->frame / ANIMATION_TIME];
 
     SDL_Rect dst;
-    setrect(dst, (SCRWIDTH - BIRDWIDTH * 4) / 2, game_state->bird_y - (BIRDHEIGHT * 4) / 2,
+    setrect(dst, (SCRWIDTH - BIRDWIDTH * 4) / 2, game_state->bird_y - BIRDHEIGHT * 4,
         BIRDWIDTH * 4, BIRDHEIGHT * 4);
-
 
     SDL_RenderCopy(sdl_state->renderer, sdl_state->bird_texture, current_frame, &dst);
     SDL_RenderPresent(sdl_state->renderer);

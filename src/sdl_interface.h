@@ -14,6 +14,7 @@
 typedef struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
+
     SDL_Texture *bird_texture;
     SDL_Rect bird_frames[2];
     int frame;
@@ -25,7 +26,7 @@ void sdl_deinit(SDLState *sdl_state);
 
 typedef enum { EC_OK, EC_QUIT, EC_MENU, EC_UP } EventCode;
 
-EventCode process_events();
+EventCode process_events(bool in_game);
 
 void render(SDLState *const sdl_state, const GameState *game_state);
 
